@@ -51,10 +51,10 @@ public class UserServiceImplDemo extends ServiceImpl<UserMapperDemo, User> imple
             throw new ParameterException("用户名已存在");
         }
         User user = new User();
-        user.setUsername(username)
-                .setPassword(password)
-                .setCreateTime(System.currentTimeMillis())
-                .setModifyTime(System.currentTimeMillis());
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setCreateTime(System.currentTimeMillis());
+        user.setModifyTime(System.currentTimeMillis());
         userService.save(user);
     }
 

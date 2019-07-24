@@ -147,7 +147,7 @@ public class MpCodeBuilder {
         return new DataSourceConfig().setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
-                .setPassword("123")
+                .setPassword("123456")
                 .setDriverName("com.mysql.jdbc.Driver");
     }
 
