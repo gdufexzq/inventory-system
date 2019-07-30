@@ -45,10 +45,6 @@ public class UserControllerDemo {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseVO test() {
-    	
-    	
-    	
-    	
         userService.test();
         return new ResponseVO(ResponseStatusEnum.SUCCESS, "");
     }
