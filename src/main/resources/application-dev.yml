@@ -28,7 +28,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/inventory-system?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
     username: root
-    password: 123456
+    password: 123
     druid:
       filters: stat,wall
       max-active: 20

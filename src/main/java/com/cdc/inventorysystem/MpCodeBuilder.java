@@ -27,7 +27,7 @@ public class MpCodeBuilder {
         //user -> UserCopyService, 设置成true: user -> IUserService
         boolean serviceNameStartWithI = false;
         //指定生成的表名
-        String[] tableNames = new String[]{"user"};
+        String[] tableNames = new String[]{"report"};
         generateByTables(serviceNameStartWithI, packageName, tableNames);
     }
 
@@ -147,7 +147,7 @@ public class MpCodeBuilder {
         return new DataSourceConfig().setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
-                .setPassword("123456")
+                .setPassword("123")
                 .setDriverName("com.mysql.jdbc.Driver");
     }
 
