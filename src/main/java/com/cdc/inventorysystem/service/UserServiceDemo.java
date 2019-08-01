@@ -6,6 +6,8 @@ import com.cdc.inventorysystem.entity.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Service;
+
 /**
  * <p>
  *  服务类

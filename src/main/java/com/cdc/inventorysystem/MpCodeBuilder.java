@@ -27,7 +27,7 @@ public class MpCodeBuilder {
         //user -> UserCopyService, 设置成true: user -> IUserService
         boolean serviceNameStartWithI = false;
         //指定生成的表名
-        String[] tableNames = new String[]{"user"};
+        String[] tableNames = new String[]{"mission"};
         generateByTables(serviceNameStartWithI, packageName, tableNames);
     }
 
@@ -143,7 +143,7 @@ public class MpCodeBuilder {
      * @return 数据源配置 DataSourceConfig
      */
     private DataSourceConfig getDataSourceConfig() {
-        String dbUrl = "jdbc:mysql://localhost:3306/inventory-system?serverTimezone=GMT%2B8";
+        String dbUrl = "jdbc:mysql://localhost:3306/project?serverTimezone=GMT%2B8";
         return new DataSourceConfig().setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
