@@ -30,12 +30,17 @@ public class UserDetailController {
 	@Autowired
 	private UserDetailService userDetailService;
 	
-	@RequestMapping(value =
-            "/selectDetail", method = RequestMethod.GET)
+	@RequestMapping(value ="/selectUserDetail", method = RequestMethod.GET)
 	@ResponseBody
-    public List<UserDetail> register(String username) {
+    public List<UserDetail> selectUserDetails(String username) {
 		
 		return userDetailService.selectUserDetails(username);
     }
+	
+	@RequestMapping(value ="/deleteUserById", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean deleteUserById(Integer id) {
+		return userDetailService.deleteUserById(id);
+	}
 }
 

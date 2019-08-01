@@ -1,7 +1,6 @@
 package com.cdc.inventorysystem.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.cdc.inventorysystem.entity.User;
 import com.cdc.inventorysystem.entity.UserDetail;
 import java.util.List;
 
@@ -14,6 +13,8 @@ import java.util.List;
  * @author xuzhiquan
  * @since 2019-08-01
  */
-public interface UserDetailService {
+public interface UserDetailService extends IService<UserDetail> {
 	public List<UserDetail> selectUserDetails(String username);
+	
+	public boolean deleteUserById(Integer id);
 }
