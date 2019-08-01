@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 
 /**
@@ -99,7 +100,8 @@ public class MpCodeBuilder {
                 //设置输出路径
                 .setOutputDir(getOutputDir("inventory-system"))
                 .setFileOverride(true)
-                .setOpen(false);
+                .setOpen(false)
+                .setDateType(DateType.ONLY_DATE); // 设置生成的时间类型为Date
         if (!serviceNameStartWithI) {
             //设置service名,%s表示表名
             globalConfig.setServiceName("%sService");
