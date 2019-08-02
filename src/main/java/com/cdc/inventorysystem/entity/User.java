@@ -2,19 +2,20 @@ package com.cdc.inventorysystem.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableField;
+import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
 
 /**
  * <p>
  * 
  * </p>
  *
- * @author xuzhiquan
- * @since 2019-05-15
+ * @author yangjinchao
+ * @since 2019-08-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,53 +24,41 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 用户主键
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "Id", type = IdType.AUTO)
+    private Integer Id;
 
-    /**
-     * 用户名
-     */
     private String username;
 
-    /**
-     * 密码
-     */
     private String password;
 
-    /**
-     * 创建时间
-     */
-    private Long createTime;
+    @TableField("regTime")
+    private String regTime;
 
-    /**
-     * 修改时间
-     */
-    private Long modifyTime;
+    @TableField("schoolId")
+    private Integer schoolId;
 
-    /**
-     * 扩展字段1
-     */
-    private String ext1;
+    private Integer credit;
 
-    /**
-     * 扩展字段2
-     */
-    private String ext2;
+    private Integer score;
 
-    /**
-     * 扩展字段3
-     */
-    private String ext3;
-
-	public Long getId() {
-		return id;
+    private String deadline;
+    
+    private String schoolName;
+    
+	public String getSchoolName() {
+		return schoolName;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public Integer getId() {
+		return Id;
+	}
+
+	public void setId(Integer id) {
+		Id = id;
 	}
 
 	public String getUsername() {
@@ -88,48 +77,44 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Long getCreateTime() {
-		return createTime;
+	public String getRegTime() {
+		return regTime;
 	}
 
-	public void setCreateTime(Long createTime) {
-		this.createTime = createTime;
+	public void setRegTime(String regTime) {
+		this.regTime = regTime;
 	}
 
-	public Long getModifyTime() {
-		return modifyTime;
+	public Integer getSchoolId() {
+		return schoolId;
 	}
 
-	public void setModifyTime(Long modifyTime) {
-		this.modifyTime = modifyTime;
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
 	}
 
-	public String getExt1() {
-		return ext1;
+	public Integer getCredit() {
+		return credit;
 	}
 
-	public void setExt1(String ext1) {
-		this.ext1 = ext1;
+	public void setCredit(Integer credit) {
+		this.credit = credit;
 	}
 
-	public String getExt2() {
-		return ext2;
+	public Integer getScore() {
+		return score;
 	}
 
-	public void setExt2(String ext2) {
-		this.ext2 = ext2;
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 
-	public String getExt3() {
-		return ext3;
+	public String getDeadline() {
+		return deadline;
 	}
 
-	public void setExt3(String ext3) {
-		this.ext3 = ext3;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setDeadline(String deadline) {
+		this.deadline = deadline;
 	}
 
 

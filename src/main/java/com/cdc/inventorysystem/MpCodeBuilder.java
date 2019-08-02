@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 
 /**
- * @Author: xuzhiquan
+ * @Author: yangjinchao
  * @Description: MybatisPlus代码生成器
  * @Date: 2019/3/2 8:27
  */
@@ -95,7 +95,7 @@ public class MpCodeBuilder {
                 .setBaseColumnList(true)
                 .setBaseResultMap(true)
                 .setActiveRecord(false)
-                .setAuthor("xuzhiquan")
+                .setAuthor("yangjinchao")
                 //设置输出路径
                 .setOutputDir(getOutputDir("inventory-system"))
                 .setFileOverride(true)
@@ -143,7 +143,7 @@ public class MpCodeBuilder {
      * @return 数据源配置 DataSourceConfig
      */
     private DataSourceConfig getDataSourceConfig() {
-        String dbUrl = "jdbc:mysql://localhost:3306/inventory-system?serverTimezone=GMT%2B8";
+        String dbUrl = "jdbc:mysql://localhost:3306/project?serverTimezone=GMT%2B8";
         return new DataSourceConfig().setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
