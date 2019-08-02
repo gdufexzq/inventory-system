@@ -1,8 +1,9 @@
 package com.cdc.inventorysystem.service;
 
-import com.cdc.inventorysystem.entity.Message;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cdc.inventorysystem.entity.Message;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,5 +41,35 @@ public interface MessageService extends IService<Message> {
      */
     Message getMessageById(int msgId);
 
-    //Boolean
+    /**
+     * 任务被接受时推送消息给任务发布者
+     *
+     * @param pubId 任务发布者Id
+     * @param title 任务标题
+     * @param name 接受者name
+     * @param acceptTime 接受时间
+     * @return boolean 消息发布成功true，失败false
+     */
+    public Boolean acceptTaskMsg(Integer pubId,String title, String name, Date acceptTime);
+
+    /**
+     * 任务完成时推送信息给任务发布者
+     * @param pubId 任务发布者Id
+     * @param title 任务标题
+     * @param name 接受者name
+     * @return Boolean 消息发布成功true，失败false
+     */
+    public Boolean compTaskMsg(Integer pubId,String title,String name);
+
+    /**
+     * 任务验收完成时通知任务接受者
+     * @param recId 任务接受者Id
+     * @param title 任务标题
+     * @param name 发布者name
+     * @param state 任务状态
+     *              - 3:验证通过(任务完成)
+     *              - 4:验证不通过(任务失败)
+     * @return boolean 消息发布成功true，失败false
+     */
+    public Boolean verifyMsg(Integer recId, String title, String name, int state);
 }
