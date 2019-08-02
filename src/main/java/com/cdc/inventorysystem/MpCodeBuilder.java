@@ -28,7 +28,7 @@ public class MpCodeBuilder {
         //user -> UserCopyService, 设置成true: user -> IUserService
         boolean serviceNameStartWithI = false;
         //指定生成的表名
-        String[] tableNames = new String[]{"mission"};
+        String[] tableNames = new String[]{"user"};
         generateByTables(serviceNameStartWithI, packageName, tableNames);
     }
 
