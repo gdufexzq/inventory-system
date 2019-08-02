@@ -21,8 +21,6 @@ import org.springframework.stereotype.Controller;
  *  前端控制器
  * </p>
  *
- * @author xuzhiquan
- * @since 2019-08-01
  */
 @Controller
 @RequestMapping("/userDetail")

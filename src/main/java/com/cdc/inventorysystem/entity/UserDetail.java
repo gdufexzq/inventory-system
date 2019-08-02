@@ -54,3 +54,4 @@ public class UserDetail implements Serializable {
     @TableField(exist = false)
     private int acceptNum;
 }
+

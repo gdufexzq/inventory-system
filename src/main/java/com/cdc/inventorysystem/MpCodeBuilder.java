@@ -102,6 +102,7 @@ public class MpCodeBuilder {
                 .setFileOverride(true)
                 .setOpen(false)
                 .setDateType(DateType.ONLY_DATE); // 设置生成的时间类型为Date
+
         if (!serviceNameStartWithI) {
             //设置service名,%s表示表名
             globalConfig.setServiceName("%sService");
@@ -145,7 +146,7 @@ public class MpCodeBuilder {
      * @return 数据源配置 DataSourceConfig
      */
     private DataSourceConfig getDataSourceConfig() {
-        String dbUrl = "jdbc:mysql://localhost:3306/inventory-system?serverTimezone=GMT%2B8";
+        String dbUrl = "jdbc:mysql://localhost:3306/project?serverTimezone=GMT%2B8";
         return new DataSourceConfig().setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")

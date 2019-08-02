@@ -1,6 +1,7 @@
 package com.cdc.inventorysystem.dao;
 
-import com.cdc.inventorysystem.entity.Message;
+import com.cdc.inventorysystem.entity.User;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -10,10 +11,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  *  Mapper 接口
  * </p>
  *
- * @author zzix
- * @since 2019-08-01
+ * @author xuzhiquan
+ * @since 2019-08-02
  */
 @Mapper
-public interface MessageMapper extends BaseMapper<Message> {
+public interface UserMapper extends BaseMapper<User> {
 
 }
