@@ -28,7 +28,7 @@ public class MpCodeBuilder {
         //user -> UserCopyService, 设置成true: user -> IUserService
         boolean serviceNameStartWithI = false;
         //指定生成的表名
-        String[] tableNames = new String[]{"mission"};
+        String[] tableNames = new String[]{"user"};
         generateByTables(serviceNameStartWithI, packageName, tableNames);
     }
 
@@ -102,6 +102,7 @@ public class MpCodeBuilder {
                 .setFileOverride(true)
                 .setOpen(false)
                 .setDateType(DateType.ONLY_DATE); // 设置生成的时间类型为Date
+
         if (!serviceNameStartWithI) {
             //设置service名,%s表示表名
             globalConfig.setServiceName("%sService");

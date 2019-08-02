@@ -2,7 +2,6 @@ package com.cdc.inventorysystem.controller;
 
 
 import com.cdc.inventorysystem.entity.Message;
-import com.cdc.inventorysystem.entity.User;
 import com.cdc.inventorysystem.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
