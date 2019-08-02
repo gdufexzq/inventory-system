@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cdc.inventorysystem.dao.UserDetailMapper;
 import com.cdc.inventorysystem.entity.UserDetail;
@@ -18,22 +20,25 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailMapper, UserDet
 	@Autowired
 	private UserDetailService userDetailService;
 	@Autowired
+	private UserDetailMapper userDetailMapper;
+	@Autowired
 	private MissionService missionService;
 	
 	@Override
-	public List<UserDetail> selectUserDetails(String username) {
-		List<UserDetail> userDetails = null;
-		
+	public IPage<UserDetail> selectUserDetails(String username, Integer current, Integer size) {
+		QueryWrapper<UserDetail> queryWrapper = new QueryWrapper<UserDetail>();
 		if(username != null && username != "") {
-			QueryWrapper<UserDetail> queryWrapper = new QueryWrapper<UserDetail>();
 			queryWrapper.like("username", username);
-			userDetails = userDetailService.list(queryWrapper);
-		} else {
-			userDetails = userDetailService.list();
 		}
-		
-		if(userDetails != null && userDetails.size() > 0) {
-			for(UserDetail userDetail : userDetails) {
+		if(current == null || size == null) {
+			current = 1;
+			size = 10;
+		}
+		Page<UserDetail> page = new Page<UserDetail>(current, size);
+		IPage<UserDetail> userDetailPage = userDetailMapper.selectPage(page, queryWrapper);
+		//查询发任务和接任务的数量
+		if(userDetailPage.getRecords() != null && userDetailPage.getRecords().size() > 0) {
+			for(UserDetail userDetail : userDetailPage.getRecords()) {
 				QueryWrapper queryWrapper1 = new QueryWrapper();
 				queryWrapper1.eq("userId", userDetail.getId());
 				userDetail.setReleaseNum(missionService.count(queryWrapper1));
@@ -42,7 +47,7 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailMapper, UserDet
 				userDetail.setAcceptNum(missionService.count(queryWrapper2));
 			}
 		}
-		return userDetails;
+		return userDetailPage;
 	}
 
 

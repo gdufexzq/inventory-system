@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cdc.inventorysystem.common.enums.ResponseStatusEnum;
 import com.cdc.inventorysystem.entity.UserDetail;
 import com.cdc.inventorysystem.entity.vo.ResponseVO;
@@ -32,9 +33,8 @@ public class UserDetailController {
 	
 	@RequestMapping(value ="/selectUserDetail", method = RequestMethod.GET)
 	@ResponseBody
-    public List<UserDetail> selectUserDetails(String username) {
-		
-		return userDetailService.selectUserDetails(username);
+    public IPage<UserDetail> selectUserDetails(String username, Integer current, Integer size) {		
+		return userDetailService.selectUserDetails(username, current, size);
     }
 	
 	@RequestMapping(value ="/deleteUserById", method = RequestMethod.GET)
