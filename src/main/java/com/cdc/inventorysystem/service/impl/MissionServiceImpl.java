@@ -35,7 +35,7 @@ public class MissionServiceImpl extends ServiceImpl<MissionMapper, Mission> impl
 	public int saveMissionOrUpdate(Mission mission) {
 		int i = 0;
 		if(mission.getId()!=null){
-			if(mission.getRecUserId()!=null){
+			if(mission.getState()==1){
 				Date date = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String recTime = sdf.format(date);
