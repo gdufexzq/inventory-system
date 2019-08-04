@@ -27,6 +27,9 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Override
     public List<Message> getMessages(Integer userId) {
+        if (userId == null) {
+            return null;
+        }
         QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
         //userId = 0 代表当前消息为全体消息
         queryWrapper.eq("userId", 0);
@@ -37,18 +40,27 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Override
     public Boolean addMessage(String title, String content, Integer id) {
+        if (title == null || content == null || id == null) {
+            return false;
+        }
         Message message = new Message();
         message.setTitle(title).setContent(content).setUserId(id);
         return messageService.saveOrUpdate(message);
     }
 
     @Override
-    public Message getMessageById(int msgId) {
+    public Message getMessageById(Integer msgId) {
+        if (msgId == null) {
+            return null;
+        }
         return messageService.getById(msgId);
     }
 
     @Override
     public Boolean acceptTaskMsg(Integer pubId,String title, String name, Date acceptTime) {
+        if(pubId == null || title == null || name == null || acceptTime == null){
+            return false;
+        }
         //格式化时间
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = format.format(acceptTime);
@@ -63,6 +75,9 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Override
     public Boolean compTaskMsg(Integer pubId,String title, String name) {
+        if(pubId == null || title == null || name == null ){
+            return false;
+        }
         Message message = new Message();
         message.setTitle("任务【"+title+"】已完成");
         message.setContent("您发布的任务【"+title+"】已被用户【"+name+"】完成，请及时验收任务结果。");
@@ -72,6 +87,9 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Override
     public Boolean verifyMsg(Integer recId,String title, String name, int state) {
+        if(recId == null || title == null || name == null  ){
+            return false;
+        }
         Message message = new Message();
         /**
          * state:任务状态，流转到此只能有以下两个状态
@@ -89,5 +107,13 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         }
         message.setUserId(recId);
         return messageService.saveOrUpdate(message);
+    }
+
+    @Override
+    public Boolean delMsgById(Integer msgId) {
+        if (msgId == null ){
+            return false;
+        }
+        return messageService.removeById(msgId);
     }
 }
