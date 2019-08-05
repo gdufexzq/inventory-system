@@ -12,6 +12,7 @@ import com.cdc.inventorysystem.service.SchoolService;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -36,9 +37,11 @@ public class SchoolController {
 	 */
 	@RequestMapping(value = "/selectSchool",method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-   public List<School> querySchool() {
-		 
-		 return schoolservice.selectSchool();
+   public Object querySchool() {
+		List<School> school = schoolservice.selectSchool();
+		Map<String, Object> resultMap = new HashedMap();
+		resultMap.put("school", school);
+		 return resultMap;
 	 }
 
 }

@@ -3,6 +3,7 @@ package com.cdc.inventorysystem.controller;
 
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,7 +59,14 @@ public class UserController {
 		 user.setPassword(password);
 		 user.setSchoolId(schoolId);
 		 user.setId(id);
-		 return userService.updateUser(user);
+		 int state = userService.updateUser(user);
+		 Map<String, Object> resultMap = new HashedMap();
+		if (state>0) {
+			resultMap.put("msg", "更新成功！");
+		}else {
+			resultMap.put("msg", "更新失败！");
+		}
+		return resultMap;
 	 }
 
 }

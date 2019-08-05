@@ -3,6 +3,7 @@ package com.cdc.inventorysystem.controller;
 
 import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,11 +54,18 @@ public class MissionController {
 	  * @param map
 	  * @return
 	  */
-	@RequestMapping(value="/delete")
+	@RequestMapping(value="/deleteMission")
 	@ResponseBody
 	public  Object delete(@RequestBody Map<String, Object> map){
 		Integer id = (Integer)map.get("id");
-		return missionService.deleteMissionById(id);
+		int state = missionService.deleteMissionById(id);
+		Map<String, Object> resultMap = new HashedMap();
+		if (state>0) {
+			resultMap.put("msg", "删除成功！");
+		}else {
+			resultMap.put("msg", "删除失败！");
+		}
+		return resultMap;
 	}
 	 
 	/**
@@ -68,7 +76,6 @@ public class MissionController {
 	 @RequestMapping(value = "/updateMission",method = {RequestMethod.GET,RequestMethod.POST})
 	 @ResponseBody
      public Object updateMission(@RequestBody Map<String, Object> map) {
-		 System.out.println(map);
 		 Integer id = (Integer)map.get("id");
 		 String title = (String)map.get("title");
 		 String content = (String)map.get("content");
@@ -78,7 +85,14 @@ public class MissionController {
 		 mission.setTitle(title);
 		 mission.setContent(content);
 		 mission.setSchoolId(schoolId);
-		return missionService.updateMission(mission);
+		 int state = missionService.updateMission(mission);
+		 Map<String, Object> resultMap = new HashedMap();
+		if (state>0) {
+			resultMap.put("msg", "更新成功！");
+		}else {
+			resultMap.put("msg", "更新失败！");
+		}
+		return resultMap;
 	 }
 	 
 
