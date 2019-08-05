@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cdc.inventorysystem.entity.School;
 import com.cdc.inventorysystem.service.SchoolService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,9 +37,17 @@ public class SchoolController {
 	 */
 	@RequestMapping(value = "/selectSchool",method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-   public List<School> querySchool() {
-		 
-		 return schoolservice.selectSchool();
+   public Object querySchool() {
+		 List<School> data = schoolservice.selectSchool();
+		 Map<String, Object> dataMap = new HashMap<String, Object>();
+		 if(data.size() != 0) {
+			 dataMap.put("msg", "查询成功！");
+			 dataMap.put("data", data);
+		 }else {
+			 dataMap.put("msg", "查询失败！");
+			 dataMap.put("data", data);
+		 }
+		 return dataMap;
 	 }
 
 }

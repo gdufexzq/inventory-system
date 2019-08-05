@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdc.inventorysystem.entity.Mission;
 import com.cdc.inventorysystem.entity.User;
 import com.cdc.inventorysystem.service.MessageService;
@@ -125,7 +126,6 @@ public class MissionController {
 	@RequestMapping(value = "/selectMission",method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public Object queryToPage(@RequestBody Map<String, Object> map) {
-		System.out.println(map);
 		Integer dpage = (Integer)map.get("dpage");//第几页
 		Integer npage = (Integer)map.get("npage");//每页显示多少条数据
 		Integer userId = (Integer)map.get("userId");//查询哪个用户的信息
@@ -133,18 +133,34 @@ public class MissionController {
 		vo.setDpage(dpage);
 		vo.setNpage(npage);
 		vo.setUserId(userId);
-		return missionService.selectMission(vo);
+		Page<Mission> data = missionService.selectMission(vo);
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		if(data.getRecords().size() != 0) {
+			dataMap.put("msg", "查询成功");
+			dataMap.put("data",data );
+		}else {
+			dataMap.put("msg", "查询失败，该用户无任务数据！");
+			dataMap.put("data",data );
+		}
+		return dataMap;
 	}
 	/**
 	 * 删除信息记录
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping(value="/delete")
+	@RequestMapping(value="/deleteMission")
 	@ResponseBody
 	public  Object delete(@RequestBody Map<String, Object> map){
 		Integer id = (Integer)map.get("id");
-		return missionService.deleteMissionById(id);
+		int data = missionService.deleteMissionById(id);
+		Map<String, Object> delMap = new HashMap<String, Object>();
+		if(data > 0) {
+			delMap.put("msg", "删除成功！");
+		}else {
+			delMap.put("msg", "删除失败！");
+		}
+		return delMap;
 	}
 
 	/**
@@ -165,7 +181,14 @@ public class MissionController {
 		mission.setTitle(title);
 		mission.setContent(content);
 		mission.setSchoolId(schoolId);
-		return missionService.updateMission(mission);
+		int data = missionService.updateMission(mission);
+		Map<String, Object> delMap = new HashMap<String, Object>();
+		if(data > 0) {
+			delMap.put("msg", "修改成功！");
+		}else {
+			delMap.put("msg", "修改失败！");
+		}
+		return delMap;
 	}
 
 }
