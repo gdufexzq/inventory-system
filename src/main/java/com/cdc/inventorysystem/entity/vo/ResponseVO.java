@@ -10,6 +10,7 @@ public class ResponseVO {
      */
     private int code;
 
+
     /**
      * 状态信息
      */
