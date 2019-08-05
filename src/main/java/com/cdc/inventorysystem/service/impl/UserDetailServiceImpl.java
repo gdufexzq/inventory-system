@@ -1,7 +1,9 @@
 package com.cdc.inventorysystem.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,10 +54,16 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailMapper, UserDet
 
 
 	@Override
-	public boolean deleteUserById(Integer id) {
+	public Map<String, String> deleteUserById(Integer id) {
 		// TODO Auto-generated method stub
-		
-		return userDetailService.removeById(id);
+		Map<String, String> responseMap = new HashMap<String, String>();
+		int num = userDetailMapper.deleteById(id);
+		if(num == 1) {
+			responseMap.put("message", "success");
+		} else {
+			responseMap.put("message", "fail");
+		}
+		return responseMap;
 	}
 
 }

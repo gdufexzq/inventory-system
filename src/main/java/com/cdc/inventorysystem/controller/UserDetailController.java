@@ -13,6 +13,7 @@ import com.cdc.inventorysystem.entity.vo.ResponseVO;
 import com.cdc.inventorysystem.service.UserDetailService;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ public class UserDetailController {
 	
 	@RequestMapping(value ="/deleteUserById", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean deleteUserById(Integer id) {
+	public Map<String, String> deleteUserById(Integer id) {
 		return userDetailService.deleteUserById(id);
 	}
 }
