@@ -21,7 +21,7 @@
     <sql id="Base_Column_List">
         Id, title, content, score, userId, pubTime, schoolId, recUserId, recTime, state, display
     </sql>
-	
+
 	<select id="getAll" resultMap="BaseResultMap" >
 		select 
 			m.Id Id,m.title title,m.content content,m.score score,m.userId userId,
@@ -32,5 +32,4 @@
 		from 
 			mission m
 	</select>
-	
 </mapper>

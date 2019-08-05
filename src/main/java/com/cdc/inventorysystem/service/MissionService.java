@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cdc.inventorysystem.entity.QueryVo;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * <p>
  *  服务类
  * </p>
  *
- * @author xuzhiquan
- * @since 2019-08-01
+ * @author yangjinchao
+ * @since 2019-07-31
  */
 public interface MissionService extends IService<Mission> {
 	public List<Mission> getAll();
@@ -21,5 +23,16 @@ public interface MissionService extends IService<Mission> {
 	 * 发布任务，领取任务
 	 * @return 
 	 */
-	public int saveMissionOrUpdate(Mission mission); 
+	public int saveMissionOrUpdate(Mission mission);
+	
+	/**
+	 * 根据发布者id查找全部任务信息
+	 * @param mission
+	 * @return
+	 */
+	public Page<Mission> selectMission(QueryVo vo);
+	
+	public int deleteMissionById(int id);
+	
+	public int updateMission(Mission mission);
 }

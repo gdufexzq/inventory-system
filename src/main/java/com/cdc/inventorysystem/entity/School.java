@@ -1,10 +1,7 @@
 package com.cdc.inventorysystem.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,34 +13,37 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author yangjinchao
- * @since 2019-08-02
+ * @since 2019-07-31
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class User implements Serializable {
+public class School implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "Id", type = IdType.AUTO)
     private Integer Id;
 
-    private String username;
+    private String name;
 
-    private String password;
+	public Integer getId() {
+		return Id;
+	}
 
-    @TableField("regTime")
-    private String regTime;
+	public void setId(Integer id) {
+		Id = id;
+	}
 
-    @TableField("schoolId")
-    private Integer schoolId;
+	public String getName() {
+		return name;
+	}
 
-    private Integer credit;
-
-    private Integer score;
-
-    private String deadline;
+	public void setName(String name) {
+		this.name = name;
+	}
     
-    private String schoolName;
+    
+
 
 }
