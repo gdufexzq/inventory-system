@@ -39,7 +39,7 @@ public interface MessageService extends IService<Message> {
      * @param msgId 消息id
      * @return
      */
-    Message getMessageById(int msgId);
+    Message getMessageById(Integer msgId);
 
     /**
      * 任务被接受时推送消息给任务发布者
@@ -72,4 +72,11 @@ public interface MessageService extends IService<Message> {
      * @return boolean 消息发布成功true，失败false
      */
     public Boolean verifyMsg(Integer recId, String title, String name, int state);
+
+    /**
+     * 根据消息Id 删除消息
+     * @param msgId 消息Id
+     * @return
+     */
+    Boolean delMsgById(Integer msgId);
 }
