@@ -33,10 +33,8 @@ public interface UserService extends IService<User> {
     public String login(String username, String password,
                  HttpServletRequest request, HttpServletResponse response);
 
-    public void test();
-
     public String logout(HttpServletRequest request, HttpServletResponse response);
 
-    public boolean validate(String username, String password);
+    public void test();
 }
 

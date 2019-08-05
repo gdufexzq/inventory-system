@@ -38,7 +38,7 @@ public class AdminController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ResponseVO logout(HttpServletRequest request, HttpServletResponse response) {
-        adminService.logout(response);
+        adminService.logout(request, response);
         return new ResponseVO(ResponseStatusEnum.SUCCESS, "");
     }
 

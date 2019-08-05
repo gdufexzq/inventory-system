@@ -1,6 +1,7 @@
 package com.cdc.inventorysystem.controller;
 
 import com.cdc.inventorysystem.common.enums.ResponseStatusEnum;
+import com.cdc.inventorysystem.common.exceptions.AccountLockException;
 import com.cdc.inventorysystem.common.exceptions.NoAuthException;
 import com.cdc.inventorysystem.common.exceptions.NoRegisterException;
 import com.cdc.inventorysystem.common.exceptions.ParameterException;
@@ -41,5 +42,11 @@ public class GlobalExceptionHandler {
     public ResponseVO noAuthException(Exception e) {
         logger.info("[op_rslt: error, no auth error.", e);
         return new ResponseVO(ResponseStatusEnum.NO_AUTH, "", e.getMessage());
+    }
+    
+    @ExceptionHandler(value = AccountLockException.class)
+    public ResponseVO accountLockException(Exception e) {
+        logger.info("[op_rslt: error, account lock error.", e);
+        return new ResponseVO(ResponseStatusEnum.ACCOUNT_LOCK, "", e.getMessage());
     }
 }

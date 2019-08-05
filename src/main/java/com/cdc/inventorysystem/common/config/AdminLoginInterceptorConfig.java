@@ -21,10 +21,11 @@ public class AdminLoginInterceptorConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         // addPathPatterns("/**") 表示拦截所有的请求，
-        // excludePathPatterns("/login", "/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
+        // excludePathPatterns("/login", "/logout") 表示除了登陆与退出之外，因为登陆退出不需要登陆也可以访问
         registry
         .addInterceptor(loginInterceptor)
-        .addPathPatterns("/**")
+        .addPathPatterns("/admin/*")
+        //.addPathPatterns("/admin/*")  //其他管理员操作
         .excludePathPatterns("/admin/login", "/admin/logout");
     }
 }

@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cdc.inventorysystem.dao.SchoolMapper;
 import com.cdc.inventorysystem.entity.School;
-import com.cdc.inventorysystem.entity.User;
 import com.cdc.inventorysystem.service.SchoolService;
 
 @Service

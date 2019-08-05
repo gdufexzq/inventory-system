@@ -11,5 +11,5 @@ public interface AdminService extends IService<Admin> {
     public String login(String username, String password,
                  HttpServletRequest request, HttpServletResponse response);
 
-    public void logout(HttpServletResponse response);
+    public String logout(HttpServletRequest request, HttpServletResponse response);
 }

@@ -2,6 +2,7 @@ package com.cdc.inventorysystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cdc.inventorysystem.common.exceptions.AccountLockException;
 import com.cdc.inventorysystem.common.exceptions.ParameterException;
 import com.cdc.inventorysystem.common.util.AESUtils;
 import com.cdc.inventorysystem.common.util.CookieUtils;
@@ -81,8 +82,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return "注册成功";
     }
 
-    @Override
-    public boolean validate(String username, String password) {
+    private boolean validate(String username, String password) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("username", username);
         List list = userService.list(queryWrapper);
@@ -99,11 +99,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } catch (Exception e) {
 			e.printStackTrace();
 		}
-        if(password.equals(user.getPassword())){
-            return true;
+        
+        if(!password.equals(user.getPassword())){
+            return false;
         }
-        return false;
+        
+        if(isLock(user)) {
+        	return false;
+        }
+        
+        return true;
     }
+    
+    //用户账户是否被屏蔽
+    private boolean isLock(User user) {
+        Date now = new Date();
+        Date deadline = user.getDeadline();
+        if(now.before(deadline)) {
+        	throw new AccountLockException("账号被屏蔽");
+        }
+		return true;		
+	}
 
     @Override
     public String login(String username, String password,
