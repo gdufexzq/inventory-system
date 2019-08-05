@@ -20,11 +20,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	@Autowired
 	private UserMapper userMapper;
 
-//	@Override
-//	public User selectUserById(int id) {
-//
-//		return userMapper.selectUserById(id);
-//	}
+	@Override
+	public User selectUserById(int id) {
+
+		return userMapper.selectUserById(id);
+	}
 
 	@Override
 	public int updateUser(User user) {
