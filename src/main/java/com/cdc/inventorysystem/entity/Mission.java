@@ -30,9 +30,8 @@ public class Mission implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	@Id
-	@Field
-    @TableId(value = "Id", type = IdType.AUTO)
-    private Integer Id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 任务标题
