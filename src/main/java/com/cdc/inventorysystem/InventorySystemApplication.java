@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 //@MapperScan("{com.cdc.inventorysystem.dao,com.cdc.inventorysystem.mapper}")
-@MapperScan("com.cdc.inventorysystem.mapper")
+//@MapperScan("com.cdc.inventorysystem.mapper")
 @MapperScan("com.cdc.inventorysystem.dao")
 @SpringBootApplication
 public class InventorySystemApplication {
