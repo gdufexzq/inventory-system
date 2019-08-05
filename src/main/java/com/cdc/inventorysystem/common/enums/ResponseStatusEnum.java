@@ -5,6 +5,7 @@ package com.cdc.inventorysystem.common.enums;
  */
 public enum ResponseStatusEnum {
 
+
     SUCCESS(200, "成功"),
     NO_REGISTER(-1, "用户未注册..."),
     PARAMETER_ERROR(-2, "参数异常..."),

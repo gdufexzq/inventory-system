@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -27,9 +29,9 @@ public class Mission implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @TableId(value = "Id", type = IdType.AUTO)
-    private Integer Id;
+	@Id
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 任务标题
@@ -59,6 +61,7 @@ public class Mission implements Serializable {
     /**
      * 发布时间
      */
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
 	@Field
     @TableField("pubTime")
     private String pubTime;
@@ -95,100 +98,5 @@ public class Mission implements Serializable {
      */
 	@Field
     private Integer display;
-
-	public Integer getId() {
-		return Id;
-	}
-
-	public void setId(Integer id) {
-		Id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public Integer getScore() {
-		return score;
-	}
-
-	public void setScore(Integer score) {
-		this.score = score;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
-	public String getPubTime() {
-		return pubTime;
-	}
-
-	public void setPubTime(String pubTime) {
-		this.pubTime = pubTime;
-	}
-
-	public Integer getSchoolId() {
-		return schoolId;
-	}
-
-	public void setSchoolId(Integer schoolId) {
-		this.schoolId = schoolId;
-	}
-
-	public Integer getRecUserId() {
-		return recUserId;
-	}
-
-	public void setRecUserId(Integer recUserId) {
-		this.recUserId = recUserId;
-	}
-
-	public String getRecTime() {
-		return recTime;
-	}
-
-	public void setRecTime(String recTime) {
-		this.recTime = recTime;
-	}
-
-	public Integer getState() {
-		return state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-	public Integer getDisplay() {
-		return display;
-	}
-
-	public void setDisplay(Integer display) {
-		this.display = display;
-	}
-
-	@Override
-	public String toString() {
-		return "Mission [Id=" + Id + ", title=" + title + ", content=" + content + ", score=" + score + ", userId="
-				+ userId + ", pubTime=" + pubTime + ", schoolId=" + schoolId + ", recUserId=" + recUserId + ", recTime="
-				+ recTime + ", state=" + state + ", display=" + display + "]";
-	}
 
 }
