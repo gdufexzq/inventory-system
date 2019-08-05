@@ -60,7 +60,10 @@ public class Mission implements Serializable {
      * 发布时间
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+=======
+>>>>>>> parent of 71f1a04... 引入elk
 =======
 >>>>>>> parent of 71f1a04... 引入elk
     @TableField("pubTime")
@@ -192,5 +195,8 @@ public class Mission implements Serializable {
 	}
 
 
+<<<<<<< HEAD
+>>>>>>> parent of 71f1a04... 引入elk
+=======
 >>>>>>> parent of 71f1a04... 引入elk
 }
