@@ -1,23 +1,23 @@
 package com.cdc.inventorysystem.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdc.inventorysystem.entity.Message;
-import com.cdc.inventorysystem.entity.User;
 import com.cdc.inventorysystem.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * <p>
  * 前端控制器
  * </p>
+ *
  * @author zzix
  * @since 2019-08-01
  */
@@ -30,16 +30,16 @@ public class MessageController {
     /**
      * 获取用户所有消息
      *
-     * @param session
+     * @param id 用户Id
      * @return
      */
-    @PostMapping("/getMessages")
+    @RequestMapping(value = "/getMessages", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public List<Message> getMessages(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        Integer userId = user.getId();
-        //Integer userId = 1;
-        List<Message> messages = messageService.getMessages(userId);
+    public Page<Message> getMessages(@RequestParam Integer id, @RequestParam(defaultValue = "1") String current, @RequestParam(defaultValue = "10") String size) {
+        if (id == null) {
+            return null;
+        }
+        Page<Message> messages = messageService.getMessages(id, current, size);
         return messages;
     }
 
@@ -51,7 +51,7 @@ public class MessageController {
      * @param userId  消息对象[0：全体对象；其他：用户id]
      * @return
      */
-    @PostMapping("/addMessage")
+    @RequestMapping(value = "/addMessage", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public HashMap addMessage(String title, String content, String userId) {
         String msg = null;
@@ -61,7 +61,7 @@ public class MessageController {
         } else {
             msg = "消息发布失败！";
         }
-        HashMap<String, Object> resultMap = new HashMap<>();
+        HashMap<String, Object> resultMap = new HashMap<>(2);
         resultMap.put("result", result);
         resultMap.put("msg", msg);
         return resultMap;
@@ -73,7 +73,7 @@ public class MessageController {
      * @param msgId
      * @return
      */
-    @PostMapping("/msgDetail")
+    @RequestMapping(value = "/msgDetail", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Message getMessageById(String msgId) {
         return messageService.getMessageById(Integer.parseInt(msgId));
@@ -85,7 +85,7 @@ public class MessageController {
      * @param msgId
      * @return
      */
-    @PostMapping("delMsg")
+    @RequestMapping(value = "delMsg", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public HashMap delMsgById(String msgId) {
         String msg = null;
@@ -95,7 +95,7 @@ public class MessageController {
         } else {
             msg = "消息删除失败！";
         }
-        HashMap<String, Object> resultMap = new HashMap<>();
+        HashMap<String, Object> resultMap = new HashMap<>(2);
         resultMap.put("result", result);
         resultMap.put("msg", msg);
         return resultMap;

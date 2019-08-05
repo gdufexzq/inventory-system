@@ -1,6 +1,7 @@
 package com.cdc.inventorysystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdc.inventorysystem.entity.Message;
 import com.cdc.inventorysystem.dao.MessageMapper;
 import com.cdc.inventorysystem.service.MessageService;
@@ -24,18 +25,18 @@ import java.util.List;
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> implements MessageService {
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Override
-    public List<Message> getMessages(Integer userId) {
+    public Page<Message> getMessages(Integer userId, String current, String size) {
         if (userId == null) {
             return null;
         }
-        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
-        //userId = 0 代表当前消息为全体消息
-        queryWrapper.eq("userId", 0);
-        queryWrapper.or(true);
-        queryWrapper.eq("userId", userId);
-        return messageService.list(queryWrapper);
+        Page<Message> messagePage = new Page<>();
+        messagePage.setCurrent(Long.parseLong(current));
+        messagePage.setSize(Long.parseLong(size));
+        return messageMapper.getMessagesByPage(messagePage,userId);
     }
 
     @Override

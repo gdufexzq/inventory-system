@@ -1,5 +1,6 @@
 package com.cdc.inventorysystem.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cdc.inventorysystem.entity.Message;
 
@@ -21,7 +22,7 @@ public interface MessageService extends IService<Message> {
      * @param userId 用户id
      * @return
      */
-    List<Message> getMessages(Integer userId);
+    Page<Message> getMessages(Integer userId, String current, String size);
 
     /**
      * 添加消息

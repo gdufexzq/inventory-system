@@ -16,4 +16,8 @@
         Id, content, TIME, userId, title
     </sql>
 
+    <select id="getMessagesByPage" resultType="com.cdc.inventorysystem.entity.Message">
+        select * from message where userId = 0 or userId = #{userId} order by time desc
+    </select>
+
 </mapper>
