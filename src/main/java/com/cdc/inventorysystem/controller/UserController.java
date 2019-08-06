@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,7 @@ import com.cdc.inventorysystem.service.UserService;
  */
 @Controller
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
 	
 	@Autowired

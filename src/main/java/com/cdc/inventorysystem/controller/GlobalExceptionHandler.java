@@ -8,6 +8,7 @@ import com.cdc.inventorysystem.common.exceptions.SystemException;
 import com.cdc.inventorysystem.entity.vo.ResponseVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 全局异常拦截器
  */
 @RestControllerAdvice
+@CrossOrigin
 public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
