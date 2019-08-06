@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 	
-//	public User selectUserById(int id);
+	public User selectUserById(int id);
 	
 	public int updateUser(User user);
 

@@ -36,12 +36,21 @@ public class UserController {
 	 * @param map
 	 * @return
 	 */
-//	@RequestMapping(value = "/selectUser",method = {RequestMethod.GET,RequestMethod.POST})
-//	 @ResponseBody
-//    public Object queryUser(@RequestBody Map<String, Object> map) {
-//		 Integer id = (Integer)map.get("id");
-//		 return userService.selectUserById(id);
-//	 }
+	@RequestMapping(value = "/selectUser",method = {RequestMethod.GET,RequestMethod.POST})
+	 @ResponseBody
+    public Object queryUser(@RequestBody Map<String, Object> map) {
+		 Integer id = (Integer)map.get("id");
+		 Map<String, Object> dataMap = new HashMap<String, Object>();
+		 User data = userService.selectUserById(id);
+		 if (data != null) {
+			dataMap.put("msg","查询成功！");
+			dataMap.put("data", data);
+		 }else {
+			dataMap.put("msg","查询失败！");
+			dataMap.put("data", data);
+		}
+		 return dataMap;
+	 }
 	
 	
 	/**

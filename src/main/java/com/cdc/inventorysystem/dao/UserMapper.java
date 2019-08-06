@@ -16,5 +16,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
+	
+	public User selectUserById(int id);
 
 }
