@@ -1,37 +1,35 @@
 package com.cdc.inventorysystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import com.cdc.inventorysystem.dao.MissionMapper;
 import com.cdc.inventorysystem.entity.Mission;
-import com.cdc.inventorysystem.entity.vo.ResponseVO;
+import com.cdc.inventorysystem.entity.vo.MissionQueryVO;
 import com.cdc.inventorysystem.repository.MissionRepository;
 import com.cdc.inventorysystem.service.MissionESService;
 import com.cdc.inventorysystem.service.MissionService;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 /**
  * <p>
@@ -49,105 +47,229 @@ public class MissionESServiceImpl implements MissionESService {
 	private ElasticsearchTemplate elasticsearchTemplate;
 	@Autowired
 	private MissionService missionService;
+	private static Integer pageNum = 1;
+	private static Integer pageSize = 10;
+	private long totalSize = 0;
+
+	public MissionQueryVO findResult(List<Mission> missionList, Long totalSize, Integer totalPages, Integer pageNum, Integer pageSize) {
+
+			MissionQueryVO missionQueryVO = new MissionQueryVO();
+			missionQueryVO.setTotalSize(totalSize);
+			missionQueryVO.setTotalPages(totalPages);
+			missionQueryVO.setPageNum(pageNum);
+			missionQueryVO.setPageSize(pageSize);
+			missionQueryVO.setMissionList(missionList);
+			return missionQueryVO;
+	}
 
 	// 根据id删除记录
 	@Override
 	public void deleteDocumentById(int id) {
-		missionRepository.deleteById(1);
+		missionRepository.deleteById(id);
+	}
+
+	@Override
+	public MissionQueryVO findAll(Integer pageNum, Integer pageSize) {
+		if(pageNum == null ) {
+			pageNum = MissionESServiceImpl.pageNum;
+		}
+		if(pageSize == null) {
+			pageSize = MissionESServiceImpl.pageSize;
+		}
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+		Page<Mission> missions = missionRepository.findAll(pageable);
+		long totalSize = missions.getTotalElements();
+		System.out.println("missions:" + missions);
+		int totalPages = missions.getTotalPages();
+		List<Mission> missionList = new ArrayList<>();
+		missions.forEach(mission -> {
+			String pubTime = timeZone(mission.getPubTime());
+			String recTime = timeZone(mission.getRecTime());
+			mission.setPubTime(pubTime);
+			mission.setRecTime(recTime);
+			missionList.add(mission);
+		});
+
+		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
 	}
 
 
 	@Override
-	public List<Mission> findAll() {
-		Iterable<Mission> missions = missionRepository.findAll();
-		List<Mission> missionsList = new ArrayList<>();
-		ArrayList<Integer> idList = new ArrayList<>();
-		System.out.println(missions);
+	public MissionQueryVO findById(int id) {
+		Optional<Mission> optional = missionRepository.findById(id);
+		if(optional != null) {
+			Mission mission = optional.get();
+			List<Mission> missionList = new ArrayList<>();
+			if(mission != null) {
+				String pubTime = timeZone(mission.getPubTime());
+				String recTime = timeZone(mission.getRecTime());
+				mission.setPubTime(pubTime);
+				mission.setRecTime(recTime);
+				missionList.add(mission);
+				return findResult(missionList, 1L, 1, 1, missionList.size());
+			}
+		}
+		return null;
+	}
+
+
+	@Override
+	public MissionQueryVO findByTitle(String title, Integer pageNum, Integer pageSize) {
+		if(pageNum == null ) {
+			pageNum = MissionESServiceImpl.pageNum;
+		}
+		if(pageSize == null) {
+			pageSize = MissionESServiceImpl.pageSize;
+		}
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+		SearchQuery searchQuery = (new NativeSearchQueryBuilder()).withQuery(QueryBuilders.queryStringQuery(title).defaultField("title")).withPageable(pageable).build();
+		Page<Mission> missions = missionRepository.search(searchQuery);
+		long totalSize = missions.getTotalElements();
+		int totalPages = missions.getTotalPages();
+		List<Mission> missionList = new ArrayList<>();
 		missions.forEach(mission -> {
-			System.out.println(mission);
-			Integer id = mission.getId();
-			idList.add(id);
+			String pubTime = timeZone(mission.getPubTime());
+			String recTime = timeZone(mission.getRecTime());
+			mission.setPubTime(pubTime);
+			mission.setRecTime(recTime);
+			missionList.add(mission);
+		});
+		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
+	}
+
+	@Override
+	public MissionQueryVO findByContent(String content, Integer pageNum, Integer pageSize) {
+		if(pageNum == null ) {
+			pageNum = MissionESServiceImpl.pageNum;
+		}
+		if(pageSize == null) {
+			pageSize = MissionESServiceImpl.pageSize;
+		}
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+		SearchQuery searchQuery = (new NativeSearchQueryBuilder()).withQuery(QueryBuilders.queryStringQuery(content).defaultField("content")).withPageable(pageable).build();
+		Page<Mission> missions = missionRepository.search(searchQuery);
+		long totalSize = missions.getTotalElements();
+		int totalPages = missions.getTotalPages();
+		List<Mission> missionList = new ArrayList<>();
+		missions.forEach(mission -> {
+			String pubTime = timeZone(mission.getPubTime());
+			String recTime = timeZone(mission.getRecTime());
+			mission.setPubTime(pubTime);
+			mission.setRecTime(recTime);
+			missionList.add(mission);
 		});
 
-		QueryWrapper queryWrapper = new QueryWrapper<>();
-		queryWrapper.in("Id", idList);
-		List<Mission> list = missionService.list(queryWrapper);
-		System.out.println(list);
-		return list;
+		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
 	}
 
-
-	@RequestMapping("/findById")
-	public Mission findById() throws Exception {
-		Optional<Mission> optional = missionRepository.findById(1);
-		Mission mission = optional.get();
-		System.out.println(mission);
-		return mission;
+	public MissionQueryVO findDBById(List<Integer> idList, Long totalSize, Integer totalPages, Integer pageNum, Integer pageSize) {
+		if (idList != null && idList.size() > 0){
+			QueryWrapper queryWrapper = new QueryWrapper<>();
+			queryWrapper.in("id", idList);
+			List<Mission> list = missionService.list(queryWrapper);
+			MissionQueryVO missionQueryVO = new MissionQueryVO();
+			missionQueryVO.setTotalSize(totalSize);
+			missionQueryVO.setTotalPages(totalPages);
+			missionQueryVO.setPageNum(pageNum);
+			missionQueryVO.setPageSize(pageSize);
+			list.forEach(mission -> {
+				mission.setPubTime(mission.getPubTime().substring(0, mission.getPubTime().length()-2));
+				mission.setRecTime(mission.getRecTime().substring(0, mission.getRecTime().length()-2));
+			});
+			missionQueryVO.setMissionList(list);
+			return missionQueryVO;
+		}
+		return null;
 	}
 
+	@Override
+	public MissionQueryVO getMissionListByStr(String content, Integer pageNum, Integer pageSize) {
+		if(pageNum == null ) {
+			pageNum = MissionESServiceImpl.pageNum;
+		}
+		if(pageSize == null) {
+			pageSize = MissionESServiceImpl.pageSize;
+		}
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+		// 色值
+		String preTag = "<font color='#dd4b39'>";
+		String postTag = "</font>";
 
-	@RequestMapping("/findByTitle")
-	public List<Mission> findByTitle() throws Exception {
-		List<Mission> list = missionRepository.findByTitle("测试工具");
-		list.forEach(mission -> System.out.println(mission));
-		return list;
-	}
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().
+				withQuery(matchQuery("title", content)).
+				withQuery(matchQuery("content", content)).
+				withHighlightFields(new HighlightBuilder.Field("title").preTags(preTag).postTags(postTag),
+						new HighlightBuilder.Field("content").preTags(preTag).postTags(postTag)).build();
+		searchQuery.setPageable(pageable);
 
-	public void testNativeSearchQuery() throws Exception {
-		// 创建一个查询对象
-//        maven是一个工程构建工具
-		NativeSearchQuery query = new NativeSearchQueryBuilder()
-				.withQuery(QueryBuilders.queryStringQuery("是").defaultField("title"))
-				.withPageable(PageRequest.of(0, 15))
-				.withHighlightFields(new HighlightBuilder.Field("title"))
-				.build();
-		// 执行查询
-		AggregatedPage<Mission> missions = elasticsearchTemplate.queryForPage(query, Mission.class,
-				new SearchResultMapper() {
-					@Override
-					public <T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable) {
-						ArrayList<Mission> missions = new ArrayList<>();
-						SearchHits hits = response.getHits();
-						for (SearchHit hit:hits){
-							if(hits.getHits().length <= 0) {
-								return null;
-							}
-							Mission mission = new Mission();
-							String highLightMessage = hit.getHighlightFields().get("title").fragments()[0].toString();
-							mission.setId(Integer.parseInt(hit.getId()));
-							mission.setTitle(hit.getSourceAsMap().get("title").toString());
-							mission.setContent(hit.getSourceAsMap().get("content").toString());
-							try {
-								String setMethodName = parSetName("title");
-								Class<? extends Mission> missionClass = Mission.class;
-								Method setMethod = missionClass.getMethod(setMethodName, String.class);
-								setMethod.invoke(mission, highLightMessage);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							missions.add(mission);
-						}
-						if(missions.size() > 0) {
-							return new AggregatedPageImpl<>((List<T>) missions);
-						}
+		// 不需要高亮直接return ideas
+		// AggregatedPage<Idea> ideas = elasticsearchTemplate.queryForPage(searchQuery, Mission.class);
+
+		// 高亮字段
+		AggregatedPage<Mission> missions = elasticsearchTemplate.queryForPage(searchQuery, Mission.class, new SearchResultMapper() {
+
+			@Override
+			public <T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> clazz, Pageable pageable) {
+				List<Mission> chunk = new ArrayList<>();
+				for (SearchHit searchHit : response.getHits()) {
+					if (response.getHits().getHits().length <= 0) {
 						return null;
 					}
-				});
-		if(missions != null && missions.getSize() > 0) {
-			missions.getContent().forEach(mission -> System.out.println(mission));
+					totalSize = response.getHits().getTotalHits();
+					System.out.println("总记录数:" + totalSize);
+					Mission mission = new Mission();
+					//name or memoe
+					HighlightField title = searchHit.getHighlightFields().get("title");
+					if (title != null) {
+						mission.setTitle(title.fragments()[0].toString());
+					}
+					HighlightField content = searchHit.getHighlightFields().get("content");
+					if (content != null) {
+						mission.setContent(content.fragments()[0].toString());
+					}
+					mission.setId((Integer) searchHit.getSourceAsMap().get("id"));
+					mission.setRecTime(timeZone((String) searchHit.getSourceAsMap().get("recTime")));
+					mission.setPubTime(timeZone((String) searchHit.getSourceAsMap().get("pubTime")));
+					mission.setSchoolId((Integer) searchHit.getSourceAsMap().get("schoolId"));
+					mission.setDisplay((Integer) searchHit.getSourceAsMap().get("display"));
+					mission.setRecUserId((Integer) searchHit.getSourceAsMap().get("userId"));
+					mission.setScore((Integer) searchHit.getSourceAsMap().get("score"));
+					mission.setState((Integer) searchHit.getSourceAsMap().get("state"));
+					mission.setUserId((Integer) searchHit.getSourceAsMap().get("userId"));
+					chunk.add(mission);
+				}
+				if (chunk.size() > 0) {
+					return new AggregatedPageImpl<>((List<T>) chunk);
+				}
+				return null;
+			}
+		});
+		int totalPages = pageSize % totalSize == 0 ?
+				(int) totalSize / pageSize  :
+				(int) totalSize /pageSize + 1;
+		List<Mission> missionList = new ArrayList<>();
+		if(missions != null) {
+			missionList = missions.getContent();
 		}
+		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
 	}
 
-	public String parSetName(String fieldName){
-		if (null == fieldName || "".equals(fieldName)) {
-			return null;
-		}
-		int startIndex = 0;
-		if (fieldName.charAt(0) == '_') {
-			startIndex = 1;
-		}
-		return "set" + fieldName.substring(startIndex, startIndex + 1).toUpperCase()
-				+ fieldName.substring(startIndex + 1);
-	}
 
+	/**
+	 * utc转为gmt
+	 */
+	public String timeZone(String utc) {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+//			"2018-01-22T09:12:43.083Z"
+			Date date = sdf1.parse(utc);//拿到Date对象
+			String str = sdf2.format(date);//输出格式：2017-01-22 17:28:33
+			System.out.println(str);
+			return str;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
