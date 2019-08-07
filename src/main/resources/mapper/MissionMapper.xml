@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.cdc.inventorysystem.entity.Mission">
-        <id column="Id" property="Id" />
+        <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="content" property="content" />
         <result column="score" property="score" />
@@ -19,12 +19,12 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        Id, title, content, score, userId, pubTime, schoolId, recUserId, recTime, state, display
+        id, title, content, score, userId, pubTime, schoolId, recUserId, recTime, state, display
     </sql>
 
 	<select id="getAll" resultMap="BaseResultMap" >
 		select 
-			m.Id Id,m.title title,m.content content,m.score score,m.userId userId,
+			m.id id,m.title title,m.content content,m.score score,m.userId userId,
 			DATE_FORMAT(m.pubTime,'%Y-%m-%d %H:%i:%s') pubTime,
 			m.schoolId schoolId,m.recUserId recUserId,
 			DATE_FORMAT(m.recTime,'%Y-%m-%d %H:%i:%s') recTime,
