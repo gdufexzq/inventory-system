@@ -1,5 +1,6 @@
 package com.cdc.inventorysystem.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +34,7 @@ import com.cdc.inventorysystem.entity.QueryVo;
  */
 @Controller
 @RequestMapping("/mission")
+@CrossOrigin
 public class MissionController {
 	@Autowired
 	MissionService missionService;

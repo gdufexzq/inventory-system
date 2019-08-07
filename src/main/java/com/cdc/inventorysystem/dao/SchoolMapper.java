@@ -1,20 +1,12 @@
 package com.cdc.inventorysystem.dao;
 
-import com.cdc.inventorysystem.entity.School;
-
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.cdc.inventorysystem.entity.School;
 
-/**
- * <p>
- *  Mapper 接口
- * </p>
- *
- * @author yangjinchao
- * @since 2019-07-31
- */
 @Mapper
-public interface SchoolMapper extends BaseMapper<School> {
-
+public interface SchoolMapper extends BaseMapper<School>  {
+	int add(@Param("name") String schoolName);
 }

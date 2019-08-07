@@ -4,19 +4,25 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import java.io.Serializable;
 
 /**
  * <p>
  * 
  * </p>
  *
- * @author yangjinchao
- * @since 2019-08-02
+ * @author xuzhiquan
+ * @since 2019-05-15
+
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,7 +39,8 @@ public class User implements Serializable {
     private String password;
 
     @TableField("regTime")
-    private String regTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date regTime;
 
     @TableField("schoolId")
     private Integer schoolId;
@@ -42,8 +49,57 @@ public class User implements Serializable {
 
     private Integer score;
 
-    private String deadline;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8") 
+    private Date deadline;
     
-    private String schoolName;
+	public Integer getId() {
+		return Id;
+	}
+	public void setId(Integer id) {
+		Id = id;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public Date getRegTime() {
+		return regTime;
+	}
+	public void setRegTime(Date regTime) {
+		this.regTime = regTime;
+	}
+	public Integer getSchoolId() {
+		return schoolId;
+	}
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
+	}
+	public Integer getCredit() {
+		return credit;
+	}
+	public void setCredit(Integer credit) {
+		this.credit = credit;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public Date getDeadline() {
+		return deadline;
+	}
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
+	}
 
 }
