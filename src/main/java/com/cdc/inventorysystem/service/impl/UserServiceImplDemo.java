@@ -53,8 +53,8 @@ public class UserServiceImplDemo extends ServiceImpl<UserMapperDemo, User> imple
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.setCreateTime(System.currentTimeMillis());
-        user.setModifyTime(System.currentTimeMillis());
+//        user.setCreateTime(System.currentTimeMillis());
+//        user.setModifyTime(System.currentTimeMillis());
         userService.save(user);
     }
 

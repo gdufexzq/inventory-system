@@ -49,7 +49,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public String register(String username, String password, String schoolName) {
-
+    	if(username == null || username.length() < 6 || username.length() > 10) {
+    		throw new ParameterException("用户名长度必须为5到10位");
+    	}
+    	if(password == null || password.length() < 6 || username.length() > 10) {
+    		throw new ParameterException("密码长度必须为5到10位");
+    	}
+    	if(schoolName == null || schoolName.length() > 20) {
+    		throw new ParameterException("高校名称长度必须少于20");
+    	}
         //判断用户名是否唯一
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("username", username);
@@ -118,7 +126,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(now.before(deadline)) {
         	throw new AccountLockException("账号被屏蔽");
         }
-		return true;		
+		return false;
 	}
 
     @Override

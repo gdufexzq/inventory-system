@@ -1,6 +1,7 @@
 package com.cdc.inventorysystem.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.cdc.inventorysystem.common.enums.ResponseStatusEnum;
 import com.cdc.inventorysystem.entity.vo.ResponseVO;
 import com.cdc.inventorysystem.service.AdminService;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2019-08-01
  */
 //跨域处理
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -29,9 +30,11 @@ public class AdminController {
     private AdminService adminService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseVO login(String username, String password,
+    public ResponseVO login(@RequestBody JSONObject json,
                             HttpServletRequest request, HttpServletResponse response) {
 //      response.setHeader("Access-Control-Allow-Origin", "*");
+    	String username = json.getString("username");
+    	String password = json.getString("password");
     	String result = adminService.login(username, password, request, response);
         return new ResponseVO(ResponseStatusEnum.SUCCESS, result);
     }

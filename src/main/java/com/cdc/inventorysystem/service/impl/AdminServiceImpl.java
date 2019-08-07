@@ -30,7 +30,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>  implement
 	public String login(String username, String password, HttpServletRequest request, HttpServletResponse response) {
         if(validate(username, password)){
             //保存信息到cookie
-//        	request.getSession().setAttribute("admin", username);
+        	request.getSession().setAttribute("admin", username);
 //            // 创建cookie并将成功登陆的用户保存在里面并且在redis中做缓存
 //            try {
 //                String sign = RSAUtils.encryptByPubKey(username + ":" + password);
@@ -53,6 +53,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>  implement
 	}
 	
     private boolean validate(String username, String password) {
+    	if(username == null || username.length() < 5 || username.length() > 10) {
+    		throw new ParameterException("管理员账户长度必须在5到10位");
+    	}
+    	if(password == null || password.length() < 5 || password.length() > 10) {
+    		throw new ParameterException("密码长度必须在5到10位");
+    	}
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("username", username);
         List list = adminService.list(queryWrapper);
@@ -69,6 +75,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>  implement
         } catch (Exception e) {
 			e.printStackTrace();
 		}
+        
         if(password.equals(admin.getPassword())){
             return true;
         }

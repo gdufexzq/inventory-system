@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2019-05-15
  */
 //跨域处理
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserControllerDemo {

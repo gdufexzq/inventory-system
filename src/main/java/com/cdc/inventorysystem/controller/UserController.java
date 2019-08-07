@@ -1,6 +1,7 @@
 package com.cdc.inventorysystem.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.cdc.inventorysystem.common.enums.ResponseStatusEnum;
 import com.cdc.inventorysystem.entity.vo.ResponseVO;
 import com.cdc.inventorysystem.service.UserService;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2019-07-31
  */
 //跨域处理
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -29,16 +30,21 @@ public class UserController {
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseVO register(@RequestParam String username, @RequestParam String password, @RequestParam String schoolName) {
+    public ResponseVO register(@RequestBody JSONObject json) {
+    	String username = json.getString("username");
+    	String password = json.getString("password");
+    	String schoolName = json.getString("schoolName");
     	String result = userService.register(username, password, schoolName);
         return new ResponseVO(ResponseStatusEnum.SUCCESS, result);
 
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseVO login(String username, String password,
+    public ResponseVO login(@RequestBody JSONObject json,
                             HttpServletRequest request, HttpServletResponse response) {
 //      response.setHeader("Access-Control-Allow-Origin", "*");
+    	String username = json.getString("username");
+    	String password = json.getString("password");
     	String result = userService.login(username, password, request, response);
         return new ResponseVO(ResponseStatusEnum.SUCCESS, result);
     }

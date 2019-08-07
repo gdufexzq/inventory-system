@@ -29,9 +29,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
         if(list == null || list.size() == 0) {
         	school = new School();
         	school.setName(schoolName);
-            schoolMapper.insert(school);
-            System.out.println("schoolName:"+school.getName());
-            System.out.println("id:"+school.getId());
+            schoolService.save(school);
+            List newlist = schoolService.list(queryWrapper);
+            school = (School) newlist.get(0);
         	return school.getId();
         }
         //否则返回已存在的id

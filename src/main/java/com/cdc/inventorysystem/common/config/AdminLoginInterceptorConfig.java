@@ -24,8 +24,7 @@ public class AdminLoginInterceptorConfig extends WebMvcConfigurationSupport {
         // excludePathPatterns("/login", "/logout") 表示除了登陆与退出之外，因为登陆退出不需要登陆也可以访问
         registry
         .addInterceptor(loginInterceptor)
-        .addPathPatterns("/admin/*")
-        //.addPathPatterns("/admin/*")  //其他管理员操作
+        .addPathPatterns("/**")
         .excludePathPatterns("/admin/login", "/admin/logout");
     }
 }

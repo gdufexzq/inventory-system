@@ -24,8 +24,7 @@ public class UserLoginInterceptorConfig extends WebMvcConfigurationSupport {
         // excludePathPatterns("/user/login", "/user/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
         registry
         .addInterceptor(loginInterceptor)
-        .addPathPatterns("/user/*")
-        //.addPathPatterns("/userDetail/*")  //其他需要登陆的用户操作
+        .addPathPatterns("/**")
         .excludePathPatterns("user/register", "/user/login", "/user/logout");
     }
 }
