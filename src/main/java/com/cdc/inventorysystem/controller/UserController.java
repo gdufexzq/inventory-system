@@ -66,7 +66,7 @@ public class UserController {
 		 Integer id = (Integer)map.get("id");
 		 String username = (String)map.get("username");
 		 String password = (String)map.get("password");
-		 Integer schoolId = (Integer)map.get("schoolId");
+		 Integer schoolId = Integer.parseInt((String)map.get("schoolId"));
 		 User user = new User();
 		 user.setUsername(username);
 		 user.setPassword(password);
