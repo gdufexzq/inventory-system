@@ -2,15 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cdc.inventorysystem.dao.SchoolMapper">
 
+<<<<<<< HEAD
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.cdc.inventorysystem.entity.School">
         <id column="Id" property="Id" />
         <result column="NAME" property="name" />
+=======
+    <!-- 通用查询映射结果 --> 
+    <resultMap id="BaseResultMap" type="com.cdc.inventorysystem.entity.School">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+>>>>>>> lwq
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
+<<<<<<< HEAD
         Id, NAME
     </sql>
 
 </mapper>
+=======
+        id, name
+    </sql>
+
+</mapper>
+>>>>>>> lwq
