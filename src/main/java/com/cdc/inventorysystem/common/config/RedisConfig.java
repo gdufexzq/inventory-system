@@ -22,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -130,7 +131,9 @@ public class RedisConfig extends CachingConfigurerSupport {
      * 不了解的同学可以去看@ConfigurationProperties和@Value的作用
      *
      */
-    @ConfigurationProperties
+
+    @Component
+    @ConfigurationProperties(prefix = "jedisprop")
     class DataJedisProperties{
         @Value("${spring.redis.host}")
         private  String host;

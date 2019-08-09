@@ -1,6 +1,5 @@
 package com.cdc.inventorysystem.entity.vo;
 
-import com.cdc.inventorysystem.entity.Mission;
 import lombok.Data;
 
 import java.util.List;
@@ -32,5 +31,5 @@ public class MissionQueryVO {
     /**
      * 返回数据
      */
-    private List<Mission> missionList;
+    private List<MissionVO> missionList;
 }

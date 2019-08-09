@@ -9,6 +9,9 @@ import com.cdc.inventorysystem.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +24,10 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2019-08-01
  */
 //跨域处理
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500",
+        maxAge = 3600, allowCredentials = "true",
+        methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.OPTIONS},
+        allowedHeaders = "*")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -30,19 +36,23 @@ public class AdminController {
     private AdminService adminService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseVO login(@RequestBody JSONObject json,
+    @ResponseBody
+    public Object login(String username, String password,
                             HttpServletRequest request, HttpServletResponse response) {
 //      response.setHeader("Access-Control-Allow-Origin", "*");
-    	String username = json.getString("username");
-    	String password = json.getString("password");
     	String result = adminService.login(username, password, request, response);
-        return new ResponseVO(ResponseStatusEnum.SUCCESS, result);
+    	Map<String,Object> dataMap = new HashMap<String, Object>();
+    	dataMap.put("msg", result);
+        return dataMap;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseVO logout(HttpServletRequest request, HttpServletResponse response) {
+    @ResponseBody
+    public Object logout(HttpServletRequest request, HttpServletResponse response) {
         adminService.logout(request, response);
-        return new ResponseVO(ResponseStatusEnum.SUCCESS, "");
+    	Map<String,Object> dataMap = new HashMap<String, Object>();
+    	dataMap.put("msg", "退出成功！");
+        return dataMap;
     }
 
 }

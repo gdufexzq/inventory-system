@@ -6,11 +6,7 @@ import com.cdc.inventorysystem.entity.Message;
 import com.cdc.inventorysystem.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -24,7 +20,10 @@ import java.util.HashMap;
  */
 @Controller
 @RequestMapping("/message")
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500",
+        maxAge = 3600, allowCredentials = "true",
+        methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.OPTIONS},
+        allowedHeaders = "*")
 public class MessageController {
     @Autowired
     private MessageService messageService;
@@ -101,6 +100,13 @@ public class MessageController {
         resultMap.put("result", result);
         resultMap.put("msg", msg);
         return resultMap;
+    }
+
+    @RequestMapping(value = "/getAdminMessages",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public Page<Message> getAdminMessages(@RequestParam(defaultValue = "1") Integer current,@RequestParam(defaultValue = "5") Integer size){
+        Page<Message> pages =  messageService.getAdminMessages(current,size);
+        return pages;
     }
 }
 

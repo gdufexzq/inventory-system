@@ -5,6 +5,7 @@ import com.cdc.inventorysystem.entity.Message;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.data.repository.query.Param;
 
 /**
@@ -17,4 +18,7 @@ import org.springframework.data.repository.query.Param;
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
     Page<Message> getMessagesByPage(Page<Message> page, @Param("userId")Integer userId);
+
+    @Select("select * from message where userId = 0 or userId = -1 or userId = -2 order by time desc")
+    Page<Message> getAdminMsgByPage(Page<Message> page);
 }

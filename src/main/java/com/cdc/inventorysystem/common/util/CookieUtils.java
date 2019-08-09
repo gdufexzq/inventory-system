@@ -66,7 +66,7 @@ public class CookieUtils {
      */
     public static void writeCookie(HttpServletResponse response, String cookieName, String value, int second) {
         Cookie cookie = new Cookie(cookieName, value);
-//        cookie.setPath("/");
+        cookie.setPath("/");
 //        cookie.setMaxAge(60 * 60 * 24); //一小时过期
         if(second != 0) {
             cookie.setMaxAge(second);

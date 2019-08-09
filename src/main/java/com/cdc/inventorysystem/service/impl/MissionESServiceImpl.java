@@ -2,11 +2,17 @@ package com.cdc.inventorysystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cdc.inventorysystem.entity.Mission;
+import com.cdc.inventorysystem.entity.School;
+import com.cdc.inventorysystem.entity.User;
 import com.cdc.inventorysystem.entity.vo.MissionQueryVO;
+import com.cdc.inventorysystem.entity.vo.MissionVO;
 import com.cdc.inventorysystem.repository.MissionRepository;
 import com.cdc.inventorysystem.service.MissionESService;
 import com.cdc.inventorysystem.service.MissionService;
+import com.cdc.inventorysystem.service.SchoolService;
+import com.cdc.inventorysystem.service.UserService;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -24,12 +30,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import java.util.*;
 
 /**
  * <p>
@@ -50,8 +51,12 @@ public class MissionESServiceImpl implements MissionESService {
 	private static Integer pageNum = 1;
 	private static Integer pageSize = 10;
 	private long totalSize = 0;
+	@Autowired
+	private SchoolService schoolService;
+	@Autowired
+	private UserService userService;
 
-	public MissionQueryVO findResult(List<Mission> missionList, Long totalSize, Integer totalPages, Integer pageNum, Integer pageSize) {
+	public MissionQueryVO findResult(List<MissionVO> missionList, Long totalSize, Integer totalPages, Integer pageNum, Integer pageSize) {
 
 			MissionQueryVO missionQueryVO = new MissionQueryVO();
 			missionQueryVO.setTotalSize(totalSize);
@@ -81,106 +86,126 @@ public class MissionESServiceImpl implements MissionESService {
 		long totalSize = missions.getTotalElements();
 		System.out.println("missions:" + missions);
 		int totalPages = missions.getTotalPages();
-		List<Mission> missionList = new ArrayList<>();
+		List<MissionVO> missionList = new ArrayList<>();
 		missions.forEach(mission -> {
+			MissionVO missionVO = new MissionVO();
 			String pubTime = timeZone(mission.getPubTime());
 			String recTime = timeZone(mission.getRecTime());
 			mission.setPubTime(pubTime);
 			mission.setRecTime(recTime);
-			missionList.add(mission);
-		});
-
-		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
-	}
-
-
-	@Override
-	public MissionQueryVO findById(int id) {
-		Optional<Mission> optional = missionRepository.findById(id);
-		if(optional != null) {
-			Mission mission = optional.get();
-			List<Mission> missionList = new ArrayList<>();
-			if(mission != null) {
-				String pubTime = timeZone(mission.getPubTime());
-				String recTime = timeZone(mission.getRecTime());
-				mission.setPubTime(pubTime);
-				mission.setRecTime(recTime);
-				missionList.add(mission);
-				return findResult(missionList, 1L, 1, 1, missionList.size());
+			School school = schoolService.getById(mission.getSchoolId());
+			User user = userService.getById(mission.getUserId());
+			String schoolName = "";
+			String userName = "";
+			String stateValue = (String) MissionVO.staticMap.get(mission.getState());
+			if (school != null) {
+				schoolName = school.getName();
 			}
-		}
-		return null;
-	}
-
-
-	@Override
-	public MissionQueryVO findByTitle(String title, Integer pageNum, Integer pageSize) {
-		if(pageNum == null ) {
-			pageNum = MissionESServiceImpl.pageNum;
-		}
-		if(pageSize == null) {
-			pageSize = MissionESServiceImpl.pageSize;
-		}
-		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
-		SearchQuery searchQuery = (new NativeSearchQueryBuilder()).withQuery(QueryBuilders.queryStringQuery(title).defaultField("title")).withPageable(pageable).build();
-		Page<Mission> missions = missionRepository.search(searchQuery);
-		long totalSize = missions.getTotalElements();
-		int totalPages = missions.getTotalPages();
-		List<Mission> missionList = new ArrayList<>();
-		missions.forEach(mission -> {
-			String pubTime = timeZone(mission.getPubTime());
-			String recTime = timeZone(mission.getRecTime());
-			mission.setPubTime(pubTime);
-			mission.setRecTime(recTime);
-			missionList.add(mission);
-		});
-		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
-	}
-
-	@Override
-	public MissionQueryVO findByContent(String content, Integer pageNum, Integer pageSize) {
-		if(pageNum == null ) {
-			pageNum = MissionESServiceImpl.pageNum;
-		}
-		if(pageSize == null) {
-			pageSize = MissionESServiceImpl.pageSize;
-		}
-		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
-		SearchQuery searchQuery = (new NativeSearchQueryBuilder()).withQuery(QueryBuilders.queryStringQuery(content).defaultField("content")).withPageable(pageable).build();
-		Page<Mission> missions = missionRepository.search(searchQuery);
-		long totalSize = missions.getTotalElements();
-		int totalPages = missions.getTotalPages();
-		List<Mission> missionList = new ArrayList<>();
-		missions.forEach(mission -> {
-			String pubTime = timeZone(mission.getPubTime());
-			String recTime = timeZone(mission.getRecTime());
-			mission.setPubTime(pubTime);
-			mission.setRecTime(recTime);
-			missionList.add(mission);
+			if (user != null) {
+				userName = user.getUsername();
+			}
+			missionVO.setSchoolName(schoolName);
+			missionVO.setStateValue(stateValue);
+			missionVO.setUserName(userName);
+			missionVO.setContent(mission.getContent());
+			missionVO.setDisplay(mission.getDisplay());
+			missionVO.setPubTime(mission.getPubTime());
+			missionVO.setScore(mission.getScore());
+			missionVO.setTitle(mission.getTitle());
+			missionList.add(missionVO);
 		});
 
 		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
 	}
 
-	public MissionQueryVO findDBById(List<Integer> idList, Long totalSize, Integer totalPages, Integer pageNum, Integer pageSize) {
-		if (idList != null && idList.size() > 0){
-			QueryWrapper queryWrapper = new QueryWrapper<>();
-			queryWrapper.in("id", idList);
-			List<Mission> list = missionService.list(queryWrapper);
-			MissionQueryVO missionQueryVO = new MissionQueryVO();
-			missionQueryVO.setTotalSize(totalSize);
-			missionQueryVO.setTotalPages(totalPages);
-			missionQueryVO.setPageNum(pageNum);
-			missionQueryVO.setPageSize(pageSize);
-			list.forEach(mission -> {
-				mission.setPubTime(mission.getPubTime().substring(0, mission.getPubTime().length()-2));
-				mission.setRecTime(mission.getRecTime().substring(0, mission.getRecTime().length()-2));
-			});
-			missionQueryVO.setMissionList(list);
-			return missionQueryVO;
-		}
-		return null;
-	}
+
+//	@Override
+//	public MissionQueryVO findById(int id) {
+//		Optional<Mission> optional = missionRepository.findById(id);
+//		if(optional != null) {
+//			Mission mission = optional.get();
+//			List<Mission> missionList = new ArrayList<>();
+//			if(mission != null) {
+//				String pubTime = timeZone(mission.getPubTime());
+//				String recTime = timeZone(mission.getRecTime());
+//				mission.setPubTime(pubTime);
+//				mission.setRecTime(recTime);
+//				missionList.add(mission);
+//				return findResult(missionList, 1L, 1, 1, missionList.size());
+//			}
+//		}
+//		return null;
+//	}
+
+
+//	@Override
+//	public MissionQueryVO findByTitle(String title, Integer pageNum, Integer pageSize) {
+//		if(pageNum == null ) {
+//			pageNum = MissionESServiceImpl.pageNum;
+//		}
+//		if(pageSize == null) {
+//			pageSize = MissionESServiceImpl.pageSize;
+//		}
+//		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+//		SearchQuery searchQuery = (new NativeSearchQueryBuilder()).withQuery(QueryBuilders.queryStringQuery(title).defaultField("title")).withPageable(pageable).build();
+//		Page<Mission> missions = missionRepository.search(searchQuery);
+//		long totalSize = missions.getTotalElements();
+//		int totalPages = missions.getTotalPages();
+//		List<Mission> missionList = new ArrayList<>();
+//		missions.forEach(mission -> {
+//			String pubTime = timeZone(mission.getPubTime());
+//			String recTime = timeZone(mission.getRecTime());
+//			mission.setPubTime(pubTime);
+//			mission.setRecTime(recTime);
+//			missionList.add(mission);
+//		});
+//		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
+//	}
+
+//	@Override
+//	public MissionQueryVO findByContent(String content, Integer pageNum, Integer pageSize) {
+//		if(pageNum == null ) {
+//			pageNum = MissionESServiceImpl.pageNum;
+//		}
+//		if(pageSize == null) {
+//			pageSize = MissionESServiceImpl.pageSize;
+//		}
+//		Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+//		SearchQuery searchQuery = (new NativeSearchQueryBuilder()).withQuery(QueryBuilders.queryStringQuery(content).defaultField("content")).withPageable(pageable).build();
+//		Page<Mission> missions = missionRepository.search(searchQuery);
+//		long totalSize = missions.getTotalElements();
+//		int totalPages = missions.getTotalPages();
+//		List<Mission> missionList = new ArrayList<>();
+//		missions.forEach(mission -> {
+//			String pubTime = timeZone(mission.getPubTime());
+//			String recTime = timeZone(mission.getRecTime());
+//			mission.setPubTime(pubTime);
+//			mission.setRecTime(recTime);
+//			missionList.add(mission);
+//		});
+//
+//		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
+//	}
+
+//	public MissionQueryVO findDBById(List<Integer> idList, Long totalSize, Integer totalPages, Integer pageNum, Integer pageSize) {
+//		if (idList != null && idList.size() > 0){
+//			QueryWrapper queryWrapper = new QueryWrapper<>();
+//			queryWrapper.in("id", idList);
+//			List<Mission> list = missionService.list(queryWrapper);
+//			MissionQueryVO missionQueryVO = new MissionQueryVO();
+//			missionQueryVO.setTotalSize(totalSize);
+//			missionQueryVO.setTotalPages(totalPages);
+//			missionQueryVO.setPageNum(pageNum);
+//			missionQueryVO.setPageSize(pageSize);
+//			list.forEach(mission -> {
+//				mission.setPubTime(mission.getPubTime().substring(0, mission.getPubTime().length()-2));
+//				mission.setRecTime(mission.getRecTime().substring(0, mission.getRecTime().length()-2));
+//			});
+//			missionQueryVO.setMissionList(list);
+//			return missionQueryVO;
+//		}
+//		return null;
+//	}
 
 	@Override
 	public MissionQueryVO getMissionListByStr(String content, Integer pageNum, Integer pageSize) {
@@ -195,11 +220,21 @@ public class MissionESServiceImpl implements MissionESService {
 		String preTag = "<font color='#dd4b39'>";
 		String postTag = "</font>";
 
+		BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+		queryBuilder.should(QueryBuilders.queryStringQuery(content).defaultField("content"))
+				.should(QueryBuilders.queryStringQuery(content).defaultField("title"));
+
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().
-				withQuery(matchQuery("title", content)).
-				withQuery(matchQuery("content", content)).
-				withHighlightFields(new HighlightBuilder.Field("title").preTags(preTag).postTags(postTag),
-						new HighlightBuilder.Field("content").preTags(preTag).postTags(postTag)).build();
+//				withQuery(QueryBuilders.queryStringQuery(content).defaultField("content")).
+//				withQuery(QueryBuilders.queryStringQuery(content).defaultField("title")).
+//				withQuery(matchQuery("title", content)).
+//				withQuery(matchQuery("content", content)).
+						withQuery(queryBuilder).
+				withHighlightFields(
+						new HighlightBuilder.Field("title").preTags(preTag).postTags(postTag),
+						new HighlightBuilder.Field("content").preTags(preTag).postTags(postTag)
+				)
+				.build();
 		searchQuery.setPageable(pageable);
 
 		// 不需要高亮直接return ideas
@@ -222,13 +257,17 @@ public class MissionESServiceImpl implements MissionESService {
 					HighlightField title = searchHit.getHighlightFields().get("title");
 					if (title != null) {
 						mission.setTitle(title.fragments()[0].toString());
+					} else {
+						mission.setTitle((String) searchHit.getSourceAsMap().get("title"));
 					}
 					HighlightField content = searchHit.getHighlightFields().get("content");
 					if (content != null) {
 						mission.setContent(content.fragments()[0].toString());
+					} else {
+						mission.setContent((String) searchHit.getSourceAsMap().get("content"));
 					}
 					mission.setId((Integer) searchHit.getSourceAsMap().get("id"));
-					mission.setRecTime(timeZone((String) searchHit.getSourceAsMap().get("recTime")));
+					//mission.setRecTime(timeZone((String) searchHit.getSourceAsMap().get("recTime")));
 					mission.setPubTime(timeZone((String) searchHit.getSourceAsMap().get("pubTime")));
 					mission.setSchoolId((Integer) searchHit.getSourceAsMap().get("schoolId"));
 					mission.setDisplay((Integer) searchHit.getSourceAsMap().get("display"));
@@ -244,12 +283,37 @@ public class MissionESServiceImpl implements MissionESService {
 				return null;
 			}
 		});
-		int totalPages = pageSize % totalSize == 0 ?
+		int totalPages = totalSize % pageSize == 0 ?
 				(int) totalSize / pageSize  :
 				(int) totalSize /pageSize + 1;
-		List<Mission> missionList = new ArrayList<>();
+//		List<Mission> missionList = new ArrayList<>();
+		List<MissionVO> missionList = new ArrayList<>();
 		if(missions != null) {
-			missionList = missions.getContent();
+//			missionList = missions.getContent();
+			missions.getContent().forEach(mission -> {
+				MissionVO missionVO = new MissionVO();
+				School school = schoolService.getById(mission.getSchoolId());
+				User user = userService.getById(mission.getUserId());
+				String schoolName = "";
+				String userName = "";
+				String stateValue = (String) MissionVO.staticMap.get(mission.getState().toString().trim());
+				if (school != null) {
+					schoolName = school.getName();
+				}
+				if (user != null) {
+					userName = user.getUsername();
+				}
+				missionVO.setId(mission.getId());
+				missionVO.setSchoolName(schoolName);
+				missionVO.setStateValue(stateValue);
+				missionVO.setUserName(userName);
+				missionVO.setContent(mission.getContent());
+				missionVO.setDisplay(mission.getDisplay());
+				missionVO.setPubTime(mission.getPubTime());
+				missionVO.setScore(mission.getScore());
+				missionVO.setTitle(mission.getTitle());
+				missionList.add(missionVO);
+			});
 		}
 		return findResult(missionList, totalSize, totalPages, pageNum, missionList.size());
 	}

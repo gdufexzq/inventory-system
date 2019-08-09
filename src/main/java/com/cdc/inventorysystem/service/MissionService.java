@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cdc.inventorysystem.entity.QueryVo;
+import com.cdc.inventorysystem.entity.vo.MissionDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
@@ -30,9 +31,15 @@ public interface MissionService extends IService<Mission> {
 	 * @param mission
 	 * @return
 	 */
-	public Page<Mission> selectMission(QueryVo vo);
+	public Page<MissionDTO> selectMission(QueryVo vo);
 	
 	public int deleteMissionById(int id);
 	
 	public int updateMission(Mission mission);
+	
+	//public Mission getAll(int id);
+	
+	public int updateState(Mission mission) ;
+
+	public Page<MissionDTO> selectMissionAll(Integer dpage,Integer npage);
 }

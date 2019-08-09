@@ -1,11 +1,15 @@
 package com.cdc.inventorysystem.aop;
 
 import com.cdc.inventorysystem.common.exceptions.NoAuthException;
+import com.cdc.inventorysystem.common.util.CookieUtils;
 import com.cdc.inventorysystem.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,21 +24,21 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
     @Autowired
     private AdminService adminService;
 
-//    @Autowired
-//    private RedisTemplate redisTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("AdminLoginInterceptor preHandle...");
 
-//        String sign = CookieUtils.getCookie(request, "admin_sign");
-//        if (sign != null && sign != "") {
-//            // 使用redis对cookie做校验,username和password作为key:value
-//            Boolean isSign = redisTemplate.hasKey(sign);
-//            if(isSign) {
-//                return true;
-//            }
-//        }
+        String sign = CookieUtils.getCookie(request, "admin_sign");
+        if (sign != null && sign != "") {
+            // 使用redis对cookie做校验,username和password作为key:value
+            Boolean isSign = redisTemplate.hasKey(sign);
+            if(isSign) {
+                return true;
+            }
+        }
 
         HttpSession session = request.getSession();
         //这里的admin是登陆时放入session的

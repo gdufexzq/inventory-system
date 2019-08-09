@@ -1,12 +1,11 @@
-package com.cdc.inventorysystem.entity;
+package com.cdc.inventorysystem.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -25,7 +24,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @Document(indexName = "inventory-system-index", type = "mission", shards = 1, replicas = 0)
-public class Mission implements Serializable {
+public class MissionDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -96,15 +95,16 @@ public class Mission implements Serializable {
      */
     @Field
     private Integer display;
-	//private String schoolName;
-	//private String recUser;
+	private String schoolName;
+	private String recUser;
+	private String pubUser;
 
-	public Mission(Integer userId) {
+	public MissionDTO(Integer userId) {
 		super();
 		this.userId = userId;
 	}
 
-	public Mission() {
+	public MissionDTO() {
 		super();
 	}
 }

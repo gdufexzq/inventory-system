@@ -117,4 +117,16 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         }
         return messageService.removeById(msgId);
     }
+
+    @Override
+    public Page<Message> getAdminMessages(Integer current, Integer size) {
+        Page<Message> page = new Page<>();
+        page.setSize(size);
+        page.setCurrent(current);
+        /**
+         * 搜索条件：message.userId = 0 -1 -2;
+         *     管理员参数：0：全体消息；-1：投诉；-2：建议
+         */
+        return messageMapper.getAdminMsgByPage(page);
+    }
 }

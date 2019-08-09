@@ -80,4 +80,6 @@ public interface MessageService extends IService<Message> {
      * @return
      */
     Boolean delMsgById(Integer msgId);
+
+    Page<Message> getAdminMessages(Integer current, Integer size);
 }

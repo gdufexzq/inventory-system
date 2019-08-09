@@ -29,7 +29,7 @@ public interface MissionESService {
 	 * @param id
 	 * @return
 	 */
-	MissionQueryVO findById(int id);
+//	MissionQueryVO findById(int id);
 
 	/**
 	 * 根据标题查询
@@ -38,7 +38,7 @@ public interface MissionESService {
 	 * @param pageSize
 	 * @return
 	 */
-	MissionQueryVO findByTitle(String title, Integer pageNum, Integer pageSize);
+//	MissionQueryVO findByTitle(String title, Integer pageNum, Integer pageSize);
 
 	/**
 	 * 根据内容查询
@@ -47,7 +47,7 @@ public interface MissionESService {
 	 * @param pageSize
 	 * @return
 	 */
-	MissionQueryVO findByContent(String content, Integer pageNum, Integer pageSize);
+//	MissionQueryVO findByContent(String content, Integer pageNum, Integer pageSize);
 
 	/**
 	 * 在标题和内容上查询

@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cdc.inventorysystem.common.util.CookieUtils;
+import com.cdc.inventorysystem.common.util.RSAUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,16 +30,22 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>  implement
 	
 	@Override
 	public String login(String username, String password, HttpServletRequest request, HttpServletResponse response) {
-        if(validate(username, password)){
+    	if(username == null || username.length() < 2 || username.length() > 10) {
+    		return "管理员账户长度必须在2到10位";
+    	}
+    	if(password == null || password.length() < 5 || password.length() > 10) {
+    		return "密码长度必须在5到10位";
+    	}
+		if(validate(username, password)){
             //保存信息到cookie
         	request.getSession().setAttribute("admin", username);
-//            // 创建cookie并将成功登陆的用户保存在里面并且在redis中做缓存
-//            try {
-//                String sign = RSAUtils.encryptByPubKey(username + ":" + password);
-//                CookieUtils.writeCookie(response, "admin_sign", sign, 0);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+            // 创建cookie并将成功登陆的用户保存在里面并且在redis中做缓存
+            try {
+                String sign = RSAUtils.encryptByPubKey(username + ":" + password);
+                CookieUtils.writeCookie(response, "admin_sign", sign, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return "登录成功";
         }else {
             return "管理员账号或密码错误";
@@ -53,8 +61,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>  implement
 	}
 	
     private boolean validate(String username, String password) {
-    	if(username == null || username.length() < 5 || username.length() > 10) {
-    		throw new ParameterException("管理员账户长度必须在5到10位");
+    	if(username == null || username.length() < 2 || username.length() > 10) {
+    		throw new ParameterException("管理员账户长度必须在2到10位");
     	}
     	if(password == null || password.length() < 5 || password.length() > 10) {
     		throw new ParameterException("密码长度必须在5到10位");

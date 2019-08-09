@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import com.cdc.inventorysystem.entity.QueryVo;
+import com.cdc.inventorysystem.entity.vo.MissionDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,12 +50,19 @@ public class MissionServiceImpl extends ServiceImpl<MissionMapper, Mission> impl
 		return i;
 		
 	}
+	
 	@Override
-	public Page<Mission> selectMission(QueryVo vo){
+	public int updateState(Mission mission) {
+		int  i = missionMapper.updateById(mission);
+		return i;
+
+	}
+	@Override
+	public Page<MissionDTO> selectMission(QueryVo vo){
 		Map<String,Object> m = new HashMap<>();
 		m.put("userId",vo.getUserId());
-		Page<Mission> page = new Page<>(vo.getDpage(),vo.getNpage());
-		Page<Mission> setRecords = page.setRecords(missionMapper.selectpage(m,page));
+		Page<MissionDTO> page = new Page<>(vo.getDpage(),vo.getNpage());
+		Page<MissionDTO> setRecords = page.setRecords(missionMapper.selectpage(m,page));
 		return setRecords;
 	}
 
@@ -69,5 +77,17 @@ public class MissionServiceImpl extends ServiceImpl<MissionMapper, Mission> impl
 	public int updateMission(Mission mission) {
 
 		return missionMapper.updateById(mission);
+	}
+
+
+	//public Mission getAll(int id) {
+	//	return missionMapper.getAll(id);
+	//}
+
+	@Override
+	public Page<MissionDTO> selectMissionAll(Integer dpage, Integer npage) {
+		Page<MissionDTO> page = new Page<>(dpage,npage);
+		Page<MissionDTO> setRecords = page.setRecords(missionMapper.selectpageBystate(page));
+		return setRecords;
 	}
 }
